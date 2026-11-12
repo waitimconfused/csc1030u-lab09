@@ -9,35 +9,125 @@
 
 
 def two_sum(nums, target):
+
     # Outline (write your plan here first):
-    #   ...
-    # TODO: return the indices [i, j] (i < j) of the two numbers in `nums` that add up
-    #   to `target`. Assume there is exactly one answer.
+    #   Loop through each item in `nums`, as
+    #   well as every other number.
+    #
+    #   If their sum is `target`, then return the
+    #   indexes: (a, b)
+
+    for a_index in range( len(nums) ):
+        
+        for b_index in range(a_index+1, len(nums) ):
+
+            a = nums[a_index]
+            b = nums[b_index]
+
+            if a + b == target: return [ a_index, b_index ]
     pass
 
 
 def max_profit(prices):
     # Outline:
-    #   ...
-    # TODO: `prices[i]` is a stock price on day i. Return the most profit obtainable by
-    #   buying on one day and selling on a LATER day. If no profit is possible, return 0.
-    pass
+    #   Loop through the prices, and find
+    #   the index of the lowest cost.
+    #
+    #   Then, loop through the rest of the list,
+    #   getting the maximum value greater than the minimum
+
+    minimum: None | int = None
+
+    for i in range( len(prices) ):
+
+        if minimum is None:
+            minimum = i
+        else:
+            if prices[i] < prices[minimum]:
+                minimum = i
+
+    if minimum is None: return 0
+
+    maximum: None | int = None
+
+    for i in range(minimum+1, len(prices)):
+        if maximum is None:
+            maximum = i
+        else:
+            if prices[i] > prices[maximum]:
+                maximum = i
+    
+    if maximum is None: return 0
+
+    return prices[maximum] - prices[minimum]
 
 
 def max_subarray(nums):
     # Outline:
-    #   ...
-    # TODO: return the largest sum of any contiguous (in-a-row) block of numbers in
-    #   `nums`. The list has at least one number.
-    pass
+    #   Generate a list of all the different
+    #   possible maximum values, based on
+    #   varying start and end indexes.
+    #
+    #   Then, loop through all the maximum
+    #   values, and return the largest.
+
+    maximums = []
+    maximum = None
+
+    for start in range( len(nums) ):
+        for end in range( start, len(nums)):
+            maximums.append( sum(nums[start:end+1]) )
+
+
+    for total in maximums:
+        if maximum is None or total > maximum:
+            maximum = total
+
+    return maximum
 
 
 def is_balanced(s):   # Part 4 - stretch (optional)
     # Outline:
-    #   ...
-    # TODO: return True if every bracket in `s` is closed correctly and in the right
-    #   order. The brackets are ( ) [ ] { }. (Hint: a list used as a stack works well.)
-    pass
+    #   Loop through each character in the string.
+    #
+    #   If it's an opening bracket, add it to the
+    #   stack
+    #
+    #   If it's a closing bracket, and there are
+    #   brackets still in the stack, return False
+    #   if the last one is not the same type as the
+    #   current one
+    # 
+    #   If the closing bracket is the same type as
+    #   the last opening bracket, it is safe to
+    #   remove it from the stack.abs
+    # 
+    #   At the end, if there are still brackets in
+    #   the stack, then they have not been closed
+    #   properly (return False). If it's empty,
+    #   return True
+
+    brackets: list[str] = []
+
+    open_bracket = {
+        ")": "(",
+        "]": "[",
+        "}": "{",
+    }
+
+    for char in s:
+
+        if char in "([{":
+            brackets.append(char)
+            continue
+
+        if char in ")]}":
+            if len(brackets) == 0 or brackets[-1] != open_bracket[char]:
+                return False
+            
+            brackets.pop()
+    
+    return True if len(brackets) == 0 else False
 
 
 def main():
